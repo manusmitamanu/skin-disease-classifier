@@ -1,0 +1,14 @@
+# Developed on Python 3.12.7, CPU-only TensorFlow 2.21, Windows.
+# Only TensorFlow is pinned to what was used. After checking your environment with
+#   pip freeze
+# replace the other lines with exact versions (name==x.y.z) for reproducibility.
+tensorflow>=2.21,<2.22
+flask
+numpy
+pandas
+pillow
+opencv-python
+scikit-learn
+matplotlib
+seaborn
+jupyter

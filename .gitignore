@@ -1,0 +1,25 @@
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+
+# Dataset images and personal test images
+data/raw/
+data/ood_check/
+
+# Local backups
+backups/
+
+# Models: keep only the final model
+models/*.keras
+!models/final_efficientnetb0.keras
+models/*.h5
+
+# OS files
+.DS_Store
+Thumbs.db
+
+project_file_inventory.txt
