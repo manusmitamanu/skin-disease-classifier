@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skin Disease Classifier :p</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3D4127; --pri:#636B2F; --sage:#BAC095; --lime:#D4DE95;
+  --bg:#F7F8EC; --side:#EFF2DD; --line:#DDE2C0; --muted:#6F7459; --soft:#8E9560;
+  --amber:#8a5a14; --rose:#9a3b3b;
+  --head:"Manrope",system-ui,sans-serif; --body:"DM Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.55;overflow-x:hidden}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* sidebar */
+.side{position:fixed;inset:0 auto 0 0;width:238px;padding:22px 18px;display:flex;flex-direction:column;
+  background:rgba(239,242,221,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-right:1px solid var(--line);z-index:50;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.brand{display:flex;align-items:center;gap:10px;font:600 20px var(--head);letter-spacing:-.02em}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#636B2F,#3D4127);box-shadow:0 8px 18px rgba(61,65,39,.25)}
+.brand b{font-weight:600;color:var(--soft)}
+.lbl{font:600 10px var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.nav{margin-top:34px}
+.nav .lbl{margin:0 0 10px 6px}
+.nav a,.nav button.n{display:flex;align-items:center;gap:12px;width:100%;height:44px;padding:0 12px;border:0;background:none;
+  border-radius:12px;color:var(--muted);text-decoration:none;font:500 14px var(--body);text-align:left}
+.nav a:hover,.nav button.n:hover{background:rgba(255,255,255,.7)}
+.nav a.on{background:#fff;color:var(--ink);box-shadow:0 4px 14px rgba(61,65,39,.08)}
+.dot{margin-left:auto;width:9px;height:9px;border-radius:50%;background:var(--pri);box-shadow:0 0 0 4px var(--lime)}
+.spacer{flex:1}
+.priv{display:flex;gap:10px;padding:14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#e6ebc6,#fff)}
+.priv .ic{width:32px;height:32px;border-radius:10px;background:#fff;display:grid;place-items:center;color:var(--pri);flex:none}
+.priv b{display:block;font:600 13px var(--head)} .priv span{font-size:11px;color:var(--muted);line-height:1.4}
+.who{padding-top:14px;margin-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.who b{display:block;font:600 13px var(--head);color:var(--ink)}
+.scrim{position:fixed;inset:0;background:rgba(30,33,18,.45);opacity:0;pointer-events:none;transition:opacity .3s;z-index:45}
+
+/* main */
+.main{margin-left:238px}
+.top{position:sticky;top:0;z-index:30;height:72px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(18px,5vw,68px);background:rgba(251,252,245,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.crumb{display:flex;align-items:center;gap:10px;color:var(--muted)} .crumb b{font-weight:500;color:var(--ink)}
+.burger{display:none;border:1px solid var(--line);background:#fff;border-radius:10px;width:40px;height:40px;place-items:center;color:var(--ink)}
+.pill{display:flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.8);font-size:12px;color:#5b6144}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--pri)} .pill.bad i{background:var(--rose)}
+.content{max-width:1100px;margin:0 auto;padding:44px 28px 28px}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:26px}
+.eyebrow{display:flex;align-items:center;gap:8px;color:var(--pri);font:600 11px var(--head);letter-spacing:.16em;text-transform:uppercase}
+.eyebrow svg{width:15px;height:15px}
+h1{margin:14px 0 14px;font:500 clamp(35px,5vw,50px)/1.05 var(--head);letter-spacing:-.04em}
+h1 span{color:var(--soft)}
+.intro p{margin:0;max-width:520px;color:var(--muted);font-size:15px}
+.metrics{display:flex;gap:22px}
+.metrics div{font:600 22px var(--head)} .metrics small{display:block;font:400 11px var(--body);color:var(--muted);margin-top:2px;max-width:130px}
+.metrics .vr{width:1px;background:var(--line)}
+
+.must{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;margin-bottom:22px;border:1px solid var(--sage);border-left:4px solid var(--pri);border-radius:14px;background:#fff}
+.must .ic{width:34px;height:34px;border-radius:10px;background:var(--lime);color:var(--ink);display:grid;place-items:center;flex:none}
+.must b{display:block;font:600 14px var(--head);margin-bottom:2px}
+.must p{margin:0;color:#59603f;font-size:13px}
+
+/* workspace */
+.ws{display:grid;grid-template-columns:1.85fr 1fr;min-height:570px;border:1px solid var(--line);border-radius:24px;overflow:hidden;
+  background:rgba(255,255,255,.75);box-shadow:0 24px 60px rgba(61,65,39,.10)}
+.left{padding:clamp(22px,4vw,40px)}
+.step{display:flex;gap:14px;align-items:center;margin-bottom:22px}
+.badge{width:40px;height:40px;border-radius:11px;border:1px solid var(--sage);background:#f0f4d6;display:grid;place-items:center;font:600 12px var(--head);color:var(--pri)}
+.step h2{margin:0;font:600 19px var(--head);letter-spacing:-.01em} .step p{margin:0;font-size:12px;color:var(--muted)}
+.drop{position:relative;height:244px;border-radius:17px;border:1.5px dashed var(--sage);cursor:pointer;overflow:hidden;
+  display:grid;place-items:center;text-align:center;
+  background:#fbfcf4 linear-gradient(90deg,rgba(99,107,47,.06) 1px,transparent 1px) 0 0/28px 28px;transition:.2s}
+.drop::before{content:"";position:absolute;inset:8px;border:1px solid rgba(99,107,47,.2);border-radius:12px;pointer-events:none;z-index:2}
+.drop:hover,.drop.over{border-color:var(--pri);background-color:#f3f6df;box-shadow:inset 0 0 28px rgba(186,192,149,.4)}
+.orbit{width:72px;height:72px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;margin:0 auto 12px;background:rgba(255,255,255,.5)}
+.orbit span{width:47px;height:47px;border-radius:13px;background:#fff;display:grid;place-items:center;color:var(--pri);box-shadow:0 8px 16px rgba(61,65,39,.12)}
+.drop strong{display:block;font:600 15px var(--head)} .drop u{color:var(--pri)} .drop small{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.drop.has img{display:block}.drop.has .empty{display:none}
+.bar{position:absolute;left:14px;right:14px;bottom:14px;z-index:3;display:none;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;
+  background:rgba(251,252,245,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);text-align:left}
+.drop.has .bar{display:flex}
+.ck{width:32px;height:32px;border-radius:9px;background:var(--pri);color:#fff;display:grid;place-items:center;flex:none}
+.bar .t{min-width:0;flex:1} .bar b{display:block;font:600 12px var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar span{font-size:10px;color:var(--muted)}
+.bar button{border:0;background:none;color:var(--pri);font:600 12px var(--head);padding:6px}
+.sweep{position:absolute;left:0;right:0;height:50px;z-index:2;display:none;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(212,222,149,.7),transparent);border-bottom:2px solid var(--pri);animation:sw 1.3s ease-in-out infinite alternate}
+.drop.busy .sweep{display:block}
+@keyframes sw{from{top:-50px}to{top:244px}}
+.msg{min-height:18px;margin:8px 0 0;font-size:12px;color:var(--rose)}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.tip{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#fbfcf4}
+.tip .ic{width:32px;height:32px;border-radius:9px;background:#eef2d3;color:var(--pri);display:grid;place-items:center;flex:none}
+.tip .ic svg{width:17px;height:17px}.tip b{display:block;font:600 11px var(--head)}.tip span{font-size:10px;color:var(--muted);line-height:1.3;display:block}
+.go{margin-top:16px;width:100%;height:45px;border:0;border-radius:12px;padding:0 8px 0 18px;display:flex;align-items:center;justify-content:space-between;
+  color:#fff;font:600 14px var(--head);background:linear-gradient(90deg,#3D4127,#636B2F);box-shadow:0 10px 22px rgba(61,65,39,.28);transition:.2s}
+.go:hover:not(:disabled){transform:translateY(-1px)}
+.go:disabled{opacity:.5;box-shadow:none;cursor:not-allowed}
+.go .ar{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.consent{display:flex;gap:6px;justify-content:center;align-items:center;margin:10px 0 0;font-size:10px;color:var(--muted);text-align:center}
+.consent svg{width:12px;height:12px}
+
+/* right panel */
+.vis{position:relative;overflow:hidden;min-height:570px;
+  background:radial-gradient(circle at 70% 18%,rgba(212,222,149,.8),transparent 55%),linear-gradient(165deg,#e9edcf,#d4de95 60%,#bac095)}
+.vis::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(rgba(99,107,47,.16) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(90deg,rgba(99,107,47,.16) 1px,transparent 1px) 0 0/34px 34px;
+  -webkit-mask:radial-gradient(circle at 55% 45%,#000,transparent 75%);mask:radial-gradient(circle at 55% 45%,#000,transparent 75%)}
+.vis::after{content:"";position:absolute;inset:auto 0 0;height:55%;background:linear-gradient(transparent,rgba(61,65,39,.65));pointer-events:none}
+.scanline{position:absolute;top:0;bottom:0;width:2px;left:0;background:linear-gradient(transparent,#fff,transparent);box-shadow:0 0 18px 4px rgba(255,255,255,.6);animation:mv 7s ease-in-out infinite alternate}
+@keyframes mv{to{left:100%}}
+.vis.has .scanline,.vis.has .mk,.vis.has .cap{display:none}
+.mk{position:absolute;width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.95);box-shadow:0 0 0 7px rgba(255,255,255,.2),0 0 18px rgba(255,255,255,.5)}
+.mk::after{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
+.tl{position:absolute;top:18px;left:18px;right:18px;z-index:3;display:flex;gap:10px;align-items:center;padding:11px 14px;max-width:250px;border-radius:14px;
+  background:rgba(61,65,39,.5);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff}
+.tl .ic{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.2);display:grid;place-items:center}
+.tl small{display:block;font:600 8px var(--head);letter-spacing:.16em}.tl b{font:500 12px var(--body)}
+.cap{position:absolute;left:20px;right:20px;bottom:22px;z-index:3;color:#fff}
+.cap b{display:block;font:600 17px var(--head);margin-bottom:4px}.cap span{font-size:12px;opacity:.9}
+.res{position:absolute;left:18px;right:18px;bottom:18px;z-index:5;max-height:calc(100% - 36px);overflow:auto;padding:16px;border-radius:17px;
+  background:rgba(252,253,247,.96);border:1px solid rgba(255,255,255,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 18px 44px rgba(30,33,18,.3);transform:translateY(115%);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .5s}
+.res.show{transform:none;opacity:1;pointer-events:auto}
+.st{display:flex;align-items:center;gap:9px;font:600 10px var(--head);letter-spacing:.16em;color:var(--pri)}
+.st .ck{width:24px;height:24px;border-radius:7px}.st .ck svg{width:14px;height:14px}
+.res h3{margin:10px 0 4px;font:600 17px var(--head);letter-spacing:-.01em}
+.res p{margin:0 0 10px;font-size:12px;color:var(--muted)}
+.cf{display:flex;justify-content:space-between;font:600 11px var(--head)} .cf span:last-child{font:400 11px var(--body);color:var(--muted)}
+.track{height:5px;border-radius:5px;background:#e8ecd2;margin:6px 0 4px;overflow:hidden}
+.track div{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--sage),var(--pri))}
+.hint{font-size:11px;color:var(--muted);margin:0 0 12px}
+.risk{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:600 10px var(--head);margin-bottom:4px;border:1px solid}
+.risk.Lower{color:#4b5a1f;background:#eef3d0;border-color:var(--lime)}
+.risk.Moderate{color:var(--amber);background:#fbf1dc;border-color:#ecd7a8}
+.risk.Elevated{color:var(--rose);background:#f9e8e6;border-color:#efc3bf}
+.note{padding:8px 10px;border-radius:9px;background:#fbf1dc;border:1px solid #ecd7a8;font-size:11px;color:#6d4a10;margin-bottom:10px}
+.melbox{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fbfcf4;margin:8px 0 10px}
+.melbox .h{display:flex;justify-content:space-between;font:600 11px var(--head)}
+.meter{position:relative;height:6px;background:#e8ecd2;border-radius:4px;margin:9px 0 6px}
+.meter .f{height:6px;border-radius:4px;background:var(--pri)}
+.meter .t{position:absolute;top:-4px;width:2px;height:14px;background:var(--ink)}
+.melbox p{margin:0;font-size:11px;color:var(--muted)}
+details{margin-bottom:10px}summary{cursor:pointer;font:600 11px var(--head);color:var(--pri)}
+.pr{display:grid;grid-template-columns:1fr 70px 38px;gap:8px;align-items:center;font-size:11px;padding:4px 0}
+.pr .b{height:4px;background:#e8ecd2;border-radius:4px}.pr .b div{height:4px;background:var(--pri);border-radius:4px}.pr span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.res .btn2{width:100%;height:38px;border:0;border-radius:10px;background:var(--pri);color:#fff;font:600 12px var(--head)}
+.res .btn2:hover{background:#4f5626}
+.errt{color:var(--rose)}
+
+/* grad-cam section */
+.cam{margin-top:22px;padding:clamp(20px,3.5vw,34px);border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.8);box-shadow:0 24px 60px rgba(61,65,39,.08)}
+.cam .step{margin-bottom:16px}
+.cam .lead{margin:0 0 18px;max-width:640px;color:#59603f;font-size:14px}
+.camgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:start}
+.fig{margin:0}
+.fig .img{aspect-ratio:1/1;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#eef2d3}
+.fig img{width:100%;height:100%;object-fit:fill;display:block}
+.fig figcaption{margin-top:8px;font:600 12px var(--head)} .fig figcaption span{display:block;font:400 11px var(--body);color:var(--muted)}
+.legend{margin-top:6px}
+.grad{height:8px;border-radius:5px;background:linear-gradient(90deg,#1f2a8a,#2fa0c0,#7fd36a,#f2e04a,#e0402a)}
+.legend div{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px}
+.how{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fbfcf4}
+.how h4{margin:0 0 8px;font:600 13px var(--head)}
+.how ul{margin:0;padding-left:18px;font-size:12px;color:#59603f}.how li{margin:5px 0}
+.how p{margin:10px 0 0;font-size:11px;color:var(--muted)}
+
+footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;font-size:11px;color:var(--muted)}
+footer span{display:flex;align-items:center;gap:7px} footer svg{width:14px;height:14px}
+footer button{border:0;background:none;color:var(--pri);font:600 11px var(--body);padding:0 0 0 4px}
+dialog{max-width:540px;width:calc(100% - 32px);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:20px;padding:24px;color:var(--ink);background:#fff;box-shadow:0 30px 70px rgba(30,33,18,.3)}
+dialog::backdrop{background:rgba(30,33,18,.5)}
+dialog h2{margin:0 0 10px;font:600 20px var(--head)} dialog h4{margin:16px 0 6px;font:600 11px var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+dialog ul{margin:0;padding-left:18px;color:#4c5336} dialog li{margin:4px 0}
+dialog button.x{margin-top:16px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 16px;font:600 12px var(--head)}
+
+@media (max-width:1024px){
+  .side{transform:translateX(-100%)} .side.open{transform:none} .scrim.open{opacity:1;pointer-events:auto}
+  .main{margin-left:0} .burger{display:grid} .content{padding:32px 20px 24px}
+}
+@media (max-width:820px){
+  .ws{grid-template-columns:1fr} .vis{order:-1;min-height:400px;height:400px}
+  .tips{grid-template-columns:1fr} .pill{display:none} .metrics{width:100%}
+  .camgrid{grid-template-columns:1fr 1fr} .how{grid-column:1/-1}
+}
+@media (max-width:480px){.camgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c2-5 5-8 9-10"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M12 9.5v5M9.5 12h5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></symbol>
+  <symbol id="i-act" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
+  <symbol id="i-ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-ar" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+
+<aside class="side" id="side" aria-label="Sidebar">
+  <div class="brand"><div class="logo"><svg class="i"><use href="#i-leaf"/></svg></div><span>Skin Disease Classifier<b> :p</b></span></div>
+  <nav class="nav" aria-label="Menu">
+    <p class="lbl">Menu</p>
+    <a class="on" href="/" aria-current="page"><svg class="i"><use href="#i-scan"/></svg>Check an image<span class="dot"></span></a>
+    <button class="n" id="openInfo" type="button"><svg class="i"><use href="#i-info"/></svg>About this tool</button>
+  </nav>
+  <div class="spacer"></div>
+  <div class="priv"><div class="ic"><svg class="i"><use href="#i-shield"/></svg></div>
+    <div><b>Your image is not saved</b><span>It is checked on the spot and then discarded.</span></div></div>
+  <div class="who"><b>A student project</b>Made for learning, not for medical use</div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<div class="main">
+  <header class="top">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button class="burger" id="burger" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <div class="crumb"><svg class="i"><use href="#i-home"/></svg><span>/</span><b>Check an image</b></div>
+    </div>
+    <div class="pill" id="pill"><i></i><span id="pillt">Starting up&hellip;</span></div>
+  </header>
+
+  <main class="content">
+    <section class="intro">
+      <div>
+        <div class="eyebrow"><svg class="i"><use href="#i-act"/></svg>Learning project</div>
+        <h1>Understand your skin,<br><span>with clarity.</span></h1>
+        <p>Upload a close-up skin photo and a computer program will guess what kind of spot it looks like. It also shows you where it looked.</p>
+      </div>
+      <div class="metrics" aria-label="Test results">
+        <div>77%<small>of test images were labelled correctly</small></div><span class="vr"></span>
+        <div>6 in 10<small>melanomas were caught in our test</small></div>
+      </div>
+    </section>
+
+    <div class="must" role="note">
+      <div class="ic"><svg class="i"><use href="#i-cam"/></svg></div>
+      <div>
+        <b>This tool only works well on dermatoscope images</b>
+        <p>A dermatoscope is a small hand-held magnifier with its own light that skin doctors use. Photos from it look very different from phone photos. If you upload a phone photo or a picture from the internet, the answer will most likely be wrong. This tool cannot replace a doctor.</p>
+      </div>
+    </div>
+
+    <section class="ws">
+      <div class="left">
+        <div class="step"><div class="badge">01</div>
+          <div><h2>Choose a skin image</h2><p>Use a dermatoscope close-up for the best results.</p></div></div>
+
+        <div class="drop" id="drop" role="button" tabindex="0" aria-label="Choose an image">
+          <div class="empty">
+            <div class="orbit"><span><svg class="i"><use href="#i-up"/></svg></span></div>
+            <strong>Drop your image here</strong>
+            <span style="font-size:12px;color:var(--muted)">or <u>pick one from your device</u></span>
+            <small>JPG, PNG or WEBP &middot; up to 10 MB</small>
+          </div>
+          <img id="prev" alt="Your chosen image">
+          <div class="sweep"></div>
+          <div class="bar"><div class="ck"><svg class="i" style="width:16px;height:16px"><use href="#i-ck"/></svg></div>
+            <div class="t"><b id="fname">file</b><span>Ready to check</span></div>
+            <button type="button" id="replace">Change</button></div>
+        </div>
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
+        <p class="msg" id="msg" role="alert"></p>
+
+        <div class="tips">
+          <div class="tip"><div class="ic"><svg class="i"><use href="#i-eye"/></svg></div><div><b>Dermatoscope photo</b><span>Not a phone photo</span></div></div>
+          <div class="tip"><div class="ic"><svg class="i"><use href="#i-scan"/></svg></div><div><b>Close-up, in the middle</b><span>The spot fills the picture</span></div></div>
+          <div class="tip"><div class="ic"><svg class="i"><use href="#i-plus"/></svg></div><div><b>No filters</b><span>Use the original photo</span></div></div>
+        </div>
+
+        <button class="go" id="go" disabled><span id="golbl">Check image</span><span class="ar" id="goic"><svg class="i"><use href="#i-ar"/></svg></span></button>
+        <p class="consent"><svg class="i"><use href="#i-shield"/></svg>By continuing, you agree that this image is checked by the program. It is not saved.</p>
+      </div>
+
+      <div class="vis" id="vis">
+        <div class="scanline"></div>
+        <div class="mk" style="top:34%;left:58%"></div><div class="mk" style="top:58%;left:36%"></div><div class="mk" style="top:72%;left:68%"></div>
+        <div class="tl"><div class="ic"><svg class="i" style="width:17px;height:17px"><use href="#i-scan"/></svg></div><div><small>SKIN CHECK</small><b>Ready for your image</b></div></div>
+        <div class="cap"><b>Made for close-up skin images</b><span>Your result will appear here.</span></div>
+        <div class="res" id="res" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="cam" id="cam" hidden aria-labelledby="camT">
+      <div class="step"><div class="badge">02</div>
+        <div><h2 id="camT">Where the program looked</h2><p>This helps you see what the answer is based on.</p></div></div>
+      <p class="lead">The colours on the right picture show which parts of your image the program paid the most attention to when it made its guess.</p>
+      <div class="camgrid">
+        <figure class="fig"><div class="img"><img id="camOrig" alt="Your image"></div><figcaption>Your image<span>Resized to a square for the program</span></figcaption></figure>
+        <figure class="fig"><div class="img"><img id="camHeat" alt="Your image with a colour map on top"></div>
+          <figcaption>Attention map</figcaption>
+          <div class="legend"><div class="grad"></div><div><span>Less attention</span><span>More attention</span></div></div></figure>
+        <div class="how">
+          <h4>How to read it</h4>
+          <ul>
+            <li>Red and yellow: the program looked here the most.</li>
+            <li>Blue: the program mostly ignored this area.</li>
+            <li>If red and yellow sit on the spot, that is a good sign.</li>
+            <li>If they sit on hair, edges or plain skin, do not trust the answer.</li>
+          </ul>
+          <p>This shows where the program looked. It does not show that the answer is right.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span><svg class="i"><use href="#i-shield"/></svg>Your image is not saved by this app.</span>
+      <span>This tool does not replace a doctor.<button id="openInfo2" type="button">Learn more</button></span>
+    </footer>
+  </main>
+</div>
+
+<dialog id="info">
+  <h2>About this tool</h2>
+  <p style="margin:0;color:#4c5336">A computer program that looks at a skin image and guesses which of 7 types it looks most like. It was made for learning. It is not a medical device.</p>
+  <p style="margin:8px 0;color:#4c5336">
+  It tries to refuse images that look very different from its training images.
+  This is not perfect, so it can still be wrong on photos that look similar.
+</p>
+  <h4>What it was taught with</h4>
+  <ul><li>About 10,000 dermatoscope images from a public collection called HAM10000</li>
+    <li>Dermatoscope images are close-ups taken with a special magnifier and light</li></ul>
+  <h4>How well it did on images it had not seen</h4>
+  <ul><li>About 77 out of 100 were labelled correctly</li>
+    <li>About 6 out of 10 melanomas were flagged. About 4 out of 10 were missed</li>
+    <li>When it flagged melanoma, only about 1 in 3 flags was a real melanoma</li></ul>
+  <h4>What the melanoma alert means</h4>
+  <ul><li>The program gives a chance (in %) that the image is a melanoma</li>
+    <li>We raise an alert when that chance is 25% or more</li>
+    <li>We kept the line low on purpose so fewer melanomas are missed. The cost is more false alarms</li>
+    <li>Below the line does NOT mean you are safe</li></ul>
+  <h4>LIMITATIONS</h4>
+  <ul><li>Phone photos and pictures from the internet. It will often be wrong</li>
+    <li>It tries to refuse images that are not dermatoscope-style, but this check is imperfect. It can wrongly refuse valid images and wrongly accept some invalid ones</li>
+    <li>Rare types, such as vascular lesions and dermatofibroma, because it saw few examples of them</li>
+    <li>It was tested only on one set of images, so results on other images may be worse</li></ul>
+  <h4>If you are worried about a spot</h4>
+  <ul><li>Please see a doctor or a skin specialist</li></ul>
+  <button class="x" id="closeInfo" type="button">Close</button>
+</dialog>
+
+<script>
+const $=s=>document.querySelector(s);
+const drop=$('#drop'),fileIn=$('#file'),prev=$('#prev'),fname=$('#fname'),msg=$('#msg'),go=$('#go'),vis=$('#vis'),res=$('#res'),cam=$('#cam');
+const ICON=n=>'<svg class="i"><use href="#i-'+n+'"/></svg>';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let current=null;
+
+const side=$('#side'),scrim=$('#scrim');
+const toggle=o=>{side.classList.toggle('open',o);scrim.classList.toggle('open',o)};
+$('#burger').onclick=()=>toggle(true); scrim.onclick=()=>toggle(false);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
+const info=$('#info');
+['#openInfo','#openInfo2'].forEach(s=>$(s).onclick=()=>{toggle(false);info.showModal()});
+$('#closeInfo').onclick=()=>info.close();
+
+fetch('/health').then(r=>{if(!r.ok)throw 0;$('#pillt').textContent='Ready'}).catch(()=>{$('#pill').classList.add('bad');$('#pillt').textContent='Program not reachable'});
+
+function btn(state){
+  const l=$('#golbl'),i=$('#goic');
+  if(state==='idle'){l.textContent='Check image';i.innerHTML=ICON('ar');go.disabled=!current}
+  if(state==='busy'){l.textContent='Checking image\u2026';i.innerHTML='<span class="spin"></span>';go.disabled=true}
+  if(state==='done'){l.textContent='Check finished';i.innerHTML=ICON('ck');go.disabled=true}
+}
+function hideRes(){res.classList.remove('show');vis.classList.remove('has');cam.hidden=true}
+
+function setFile(f){
+  if(!f)return; msg.textContent='';
+  if(!['image/jpeg','image/png','image/webp'].includes(f.type)){msg.textContent='Please choose a JPG, PNG or WEBP image.';return}
+  if(f.size>10*1024*1024){msg.textContent='That file is bigger than 10 MB.';return}
+  current=f; if(prev.dataset.u)URL.revokeObjectURL(prev.dataset.u);
+  prev.dataset.u=URL.createObjectURL(f); prev.src=prev.dataset.u; fname.textContent=f.name;
+  drop.classList.add('has'); hideRes(); btn('idle');
+}
+drop.onclick=()=>fileIn.click();
+drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileIn.click()}};
+$('#replace').onclick=e=>{e.stopPropagation();fileIn.click()};
+fileIn.onchange=()=>{setFile(fileIn.files[0]);fileIn.value=''};
+['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>setFile(e.dataTransfer.files[0]));
+
+go.onclick=async()=>{
+  if(!current)return;
+  btn('busy'); drop.classList.add('busy'); hideRes(); msg.textContent='';
+  const fd=new FormData(); fd.append('file',current);
+  try{
+    const r=await fetch('/predict',{method:'POST',body:fd});
+    if(!r.ok)throw new Error('http '+r.status);
+    const data = await r.json();
+
+if (data.unsupported) {
+    renderUnsupported();
+    btn('idle');
+} else {
+    render(data);
+    btn('done');
+}
+  }catch(e){ renderErr(); btn('idle'); }
+  drop.classList.remove('busy');
+};
+function show(html,has){res.innerHTML=html;vis.classList.toggle('has',!!has);requestAnimationFrame(()=>res.classList.add('show'))}
+
+const LEVEL={Lower:'Lower concern',Moderate:'Medium concern',Elevated:'Higher concern'};
+const LEVEL_HELP={
+  Lower:'The program did not find signs it usually links to cancer. This does not mean the spot is safe.',
+  Moderate:'The closest match is a type that can need a doctor\u2019s check.',
+  Elevated:'The melanoma alert went up. Please show this spot to a doctor.'};
+
+function render(d){
+  const pct=(d.confidence*100).toFixed(0), mel=(d.mel_probability*100), thr=(d.threshold*100);
+  const rare=['vasc','df'].includes(d.code);
+  const rows=d.probabilities.map(p=>'<div class="pr"><span>'+esc(p.name)+'</span><div class="b"><div style="width:'+(p.p*100).toFixed(1)+'%"></div></div><span>'+(p.p*100).toFixed(1)+'%</span></div>').join('');
+
+  show(
+   '<div class="st"><div class="ck">'+ICON('ck')+'</div>RESULT READY</div>'+
+   '<h3>Closest match: '+esc(d.prediction)+'</h3>'+
+   '<p>The program thinks your image looks most like this type. This is a computer\u2019s guess, not a diagnosis.</p>'+
+   (d.low_confidence?'<div class="note"><b>The program is unsure.</b> This may not be a close-up dermatoscope image, so please do not rely on this answer.</div>':'')+
+   (rare?'<div class="note"><b>Rare type.</b> The program saw few examples of this type while learning, so this answer is less reliable.</div>':'')+
+   '<div class="cf"><span>'+pct+'%</span><span>how sure the program is</span></div><div class="track"><div style="width:'+pct+'%"></div></div>'+
+   '<p class="hint">A high number does not mean the guess is right. The program can be sure and still be wrong.</p>'+
+   '<span class="risk '+esc(d.risk_level)+'">'+LEVEL[d.risk_level]+'</span>'+
+   '<p class="hint">'+LEVEL_HELP[d.risk_level]+'</p>'+
+   '<div class="melbox"><div class="h"><span>Melanoma check</span><span>'+mel.toFixed(1)+'% chance</span></div>'+
+   '<div class="meter"><div class="f" style="width:'+Math.min(mel,100).toFixed(1)+'%"></div><div class="t" style="left:'+thr.toFixed(0)+'%"></div></div>'+
+   '<p><b>'+(d.mel_flag?'Alert raised.':'No alert.')+'</b> The black line at '+thr.toFixed(0)+'% is the alert line. '+
+   (d.mel_flag?'The chance is above the line, so please see a doctor.':'The chance is below the line, but this does not mean you are safe.')+'</p></div>'+
+   '<details><summary>See all 7 results</summary>'+rows+'</details>'+
+   '<button class="btn2" id="rep" type="button">Check another image</button>', true);
+  $('#rep').onclick=()=>fileIn.click();
+
+  $('#camOrig').src=prev.src; $('#camHeat').src=d.gradcam; cam.hidden=false;
+  setTimeout(()=>cam.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'}),350);
+}
+
+
+function renderUnsupported() {
+    show(
+        '<div class="st errt">IMAGE NOT SUPPORTED</div>' +
+        '<h3>This doesn’t look like a dermatoscope image</h3>' +
+        '<p>This image looks too different from the close-up dermatoscope images this tool was made for, so it won’t give a guess. If it is a dermatoscope image, the tool may be wrong to refuse it. If you are worried about a spot, please see a doctor.</p>' +
+        '<button class="btn2" id="rep2" type="button">Try another image</button>',
+        false
+    );
+
+    $('#rep2').onclick = () => fileIn.click();
+}
+
+function renderErr(){
+  show('<div class="st errt">SOMETHING WENT WRONG</div><h3>We couldn\u2019t check this image</h3>'+
+       '<p>Please check the image type (JPG, PNG or WEBP) and try again.</p><button class="btn2" id="retry" type="button">Try again</button>', false);
+  $('#retry').onclick=()=>go.click();
+}
+</script>
+</body>
+</html>
