@@ -1,0 +1,1 @@
+{"mel_threshold": 0.25, "classes": ["akiec", "bcc", "bkl", "df", "mel", "nv", "vasc"], "ood_threshold": 68.96331787109375}
