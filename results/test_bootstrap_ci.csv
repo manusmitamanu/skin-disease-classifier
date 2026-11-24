@@ -1,0 +1,8 @@
+metric,estimate,ci_low,ci_high
+accuracy,0.7718,0.7461,0.7971
+balanced_acc,0.6149,0.5546,0.674
+macro_f1,0.5872,0.5246,0.6373
+mel_recall@0.25,0.6121,0.5273,0.6989
+mel_precision@0.25,0.3311,0.2618,0.4006
+df_recall,0.45,0.2142,0.7372
+vasc_recall,0.7895,0.565,0.9546

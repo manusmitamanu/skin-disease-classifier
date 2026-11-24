@@ -1,0 +1,7 @@
+model,backbone,stage,weights,aug,val_accuracy,val_balanced_accuracy,val_macro_f1,mel_recall,mel_precision,best_epoch,delta_macro_f1_vs_final
+efficientnetb0_finetuned_sqrt,efficientnetb0,fine-tuned,sqrt,v1,0.7742,0.6308,0.6096,0.4588,0.4483,13,-0.0
+efficientnetb0_frozen_head_sqrt,efficientnetb0,frozen head,sqrt,v1,0.7507,0.5869,0.5876,0.4412,0.436,7,-0.022
+mobilenetv2_finetuned_sqrt,mobilenetv2,fine-tuned,sqrt,v1,0.78,0.5837,0.5646,0.4706,0.5369,13,-0.045
+mobilenetv2_frozen_head_sqrtweights,mobilenetv2,frozen head,sqrt,v1,0.7591,0.5359,0.5351,0.4882,0.4536,7,-0.075
+mobilenetv2_finetuned_sqrt_aug2,mobilenetv2,fine-tuned,sqrt,v2,0.6932,0.5441,0.5059,0.5059,0.3981,7,-0.104
+mobilenetv2_frozen_head_fullweights,mobilenetv2,frozen head,full,v1,0.6508,0.5975,0.4693,0.5412,0.3345,7,-0.14
