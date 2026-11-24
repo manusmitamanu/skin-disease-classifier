@@ -1,0 +1,9 @@
+{
+  "model": "efficientnetb0_frozen_head_sqrt",
+  "val_accuracy": 0.7506527415143603,
+  "val_balanced_accuracy": 0.5869098052102087,
+  "val_macro_f1": 0.5875974742838143,
+  "mel_recall": 0.4411764705882353,
+  "mel_precision": 0.436046511627907,
+  "best_epoch": 7
+}

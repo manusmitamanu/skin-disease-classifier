@@ -1,0 +1,9 @@
+{
+  "model": "efficientnetb0_finetuned_sqrt",
+  "val_accuracy": 0.7741514360313316,
+  "val_balanced_accuracy": 0.6307668125676128,
+  "val_macro_f1": 0.6096377775043219,
+  "mel_recall": 0.4588235294117647,
+  "mel_precision": 0.4482758620689655,
+  "best_epoch": 13
+}

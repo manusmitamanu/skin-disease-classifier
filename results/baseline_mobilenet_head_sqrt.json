@@ -1,0 +1,9 @@
+{
+  "model": "mobilenetv2_frozen_head_sqrtweights",
+  "val_accuracy": 0.7591383812010444,
+  "val_balanced_accuracy": 0.5358785513387049,
+  "val_macro_f1": 0.5351182085610059,
+  "mel_recall": 0.48823529411764705,
+  "mel_precision": 0.453551912568306,
+  "best_epoch": 7
+}

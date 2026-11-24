@@ -1,0 +1,9 @@
+{
+  "model": "mobilenetv2_finetuned_sqrt",
+  "val_accuracy": 0.7800261096605744,
+  "val_balanced_accuracy": 0.5837426622829022,
+  "val_macro_f1": 0.5646046094887145,
+  "mel_recall": 0.47058823529411764,
+  "mel_precision": 0.5369127516778524,
+  "best_epoch": 13
+}
